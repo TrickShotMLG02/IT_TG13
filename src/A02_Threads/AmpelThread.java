@@ -9,7 +9,7 @@ public class AmpelThread implements Runnable {
     int[] time = {5,2,5,2};
     String name;
     int wait;
-    Thread t;
+    public Thread t;
 
     AmpelThread(String name, int wait)
     {
@@ -30,7 +30,6 @@ public class AmpelThread implements Runnable {
                 }
                 catch (Exception e)
                 {
-
                 }
             }
         }
