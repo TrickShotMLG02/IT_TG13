@@ -20,7 +20,7 @@ public class AmpelThread implements Runnable {
 
     @Override
     public void run() {
-        while (true)s
+        while (true)
         {
             for (int i = 0; i < zs.length; i++) {
                 System.out.println(name + ": " + zs[i]);
