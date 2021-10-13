@@ -18,6 +18,18 @@ public class Test {
             }
         }).distinct().forEach(System.out::println);
 
+
+
+
+
+
+
+        for (int i = 0; i == 0; i += 0)
+            System.out.println("Hammer lässt grüssen xD");
+
+
+
+
     }
 
 }
