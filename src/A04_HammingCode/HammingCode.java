@@ -1,74 +1,102 @@
 package A04_HammingCode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-class HammingCode {
+public class HammingCode {
 
-    // print elements of array
-    static void print(int arr[])
-    {
-        Arrays.stream(arr).forEach(System.out::print);
+    static List<Character> arr = new ArrayList<Character>();
+    static String input = "00011010";
+    static final int offset = 1;
+    static final Character PARITYBIT = 'X';
+    static int paritybitCount = 0;
+
+    public static void main(String[] args) {
+
+        //Add P and numbers to list
+        arr = populateList(arr);
+        //Remove first index with value N
+        arr = normalizeList(arr);
+
+
+        //calculateParityBits(arr);
+        arr = calculateParityBits(arr);
+
+
+
+        //Print list
+        //Arrays.stream(arr.toArray()).forEach(System.out::println);
     }
 
-    // calculating value of redundant bits
-    static int[] calculation(int[] ar, int r)
+    public static List<Character> populateList(List<Character> list)
     {
-        for (int i = 0; i < r; i++) {
-            int x = (int)Math.pow(2, i);
-            for (int j = 1; j < ar.length; j++) {
-                if (((j >> i) & 1) == 1) {
-                    if (x != j)
-                        ar[x] = ar[x] ^ ar[j];
+        int numPos = 0;
+        list.add('N');
+
+        for (int i = 1; i < 12 + offset; i++)
+        {
+            if (isSequence(i, 2))
+            {
+                list.add(PARITYBIT);
+                paritybitCount++;
+            }
+            else
+            {
+                list.add(input.charAt(numPos));
+                numPos++;
+            }
+        }
+        return list;
+    }
+
+    public static List<Character> calculateParityBits(List<Character> list)
+    {
+        int tmp = 0;
+        int length = 0;
+        int pos = 0;
+
+        for (int i = 0; i < paritybitCount; i++) {
+
+            tmp = 0;
+            length = (int) Math.pow(2, i);
+
+            for (int j = 0; j < list.size(); j += 2* length) {
+                for (int k = 0; k < length; k++) {
+
+                    pos = j + length - 1 + k;
+
+                    //Try-Catch
+                    if (pos < list.size() && list.get(pos) == '1')
+                    {
+                        tmp++;
+                    }
                 }
             }
-            System.out.println("r" + x + " = "
-                    + ar[x]);
+            //write 0 / 1 into array parity
+            {
+                int ppos = (int) Math.pow(2, i);
+                list.set(ppos-1, Integer.toString((tmp % 2)).charAt(0));
+                System.out.println("p" + i + " = " + (tmp % 2));
+            }
+
         }
-        return ar;
+        
+        return list;
     }
 
-    static int[] generateCode(String str, int M, int r)
+    public static List<Character> normalizeList(List<Character> list)
     {
-        int[] ar = new int[r + M + 1];
-        int j = 0;
-        for (int i = 1; i < ar.length; i++) {
-            if ((Math.ceil(Math.log(i) / Math.log(2))
-                    - Math.floor(Math.log(i) / Math.log(2)))
-                    == 0) {
-
-                // if i == 2^n for n in (0, 1, 2, .....)
-                // then ar[i]=0
-                // codeword[i] = 0 ----
-                // redundant bits are initialized
-                // with value 0
-                ar[i] = 0;
-            }
-            else {
-
-                // codeword[i] = dataword[j]
-                ar[i] = (int)(str.charAt(j) - '0');
-                j++;
-            }
-        }
-        return ar;
+        list.remove(0);
+        return list;
     }
 
-    // Driver code
-    public static void main(String[] args)
+    public static boolean isSequence(int num, int base)
     {
-        // input message
-        String str = "010";
-        int M = str.length();
-        int r = 1;
-
-        while (Math.pow(2, r) < (M + r + 1)) {
-            // r is number of redundant bits
-            r++;
+        for (int i = 0; i < input.length(); i++) {
+            if (Math.pow(base, i) == num)
+                return true;
         }
-        int[] ar = generateCode(str, M, r);
-
-        System.out.println("Generated hamming code ");
-        ar = calculation(ar, r);
-        print(ar);
+        return false;
     }
 }
