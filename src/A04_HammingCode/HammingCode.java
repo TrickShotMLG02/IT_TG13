@@ -6,34 +6,33 @@ import java.util.List;
 
 public class HammingCode {
 
-    static List<Character> arr = new ArrayList<Character>();
-    static String input = "00011010";
-    static final int offset = 1;
-    static final Character PARITYBIT = 'X';
-    static int paritybitCount = 0;
+    public static String input = "00011010";
+    public static List<Character> arr = new ArrayList<Character>();
+    public static final int offset = 1;
+    public static final Character PARITYBIT = 'X';
+    public static int paritybitCount = 0;
 
-    public static void main(String[] args) {
-
-        //Add P and numbers to list
+    public static void main(String[] args)
+    {
         arr = populateList(arr);
         //Remove first index with value N
         arr = normalizeList(arr);
-
-
         //calculateParityBits(arr);
         arr = calculateParityBits(arr);
 
-
-
         //Print list
-        //Arrays.stream(arr.toArray()).forEach(System.out::println);
+        Arrays.stream(arr.toArray()).forEach(System.out::print);
     }
 
+    /**
+     * Add binary input number to array and add parity bits in between
+     * @param list
+     * @return ArrayList of type Character
+     */
     public static List<Character> populateList(List<Character> list)
     {
         int numPos = 0;
         list.add('N');
-
         for (int i = 1; i < 12 + offset; i++)
         {
             if (isSequence(i, 2))
@@ -50,47 +49,51 @@ public class HammingCode {
         return list;
     }
 
+
+    /**
+     * Calculate Paritybits and replace the placeholders
+     * @param list
+     * @return ArrayList populated with all calculated Paritybits
+     */
     public static List<Character> calculateParityBits(List<Character> list)
     {
-        int tmp = 0;
-        int length = 0;
         int pos = 0;
-
         for (int i = 0; i < paritybitCount; i++) {
-
-            tmp = 0;
-            length = (int) Math.pow(2, i);
-
-            for (int j = 0; j < list.size(); j += 2* length) {
+            int tmp = 0;
+            int length = (int) Math.pow(2, i);
+            for (int j = 0; j < list.size(); j += 2 * length) {
                 for (int k = 0; k < length; k++) {
-
                     pos = j + length - 1 + k;
-
-                    //Try-Catch
-                    if (pos < list.size() && list.get(pos) == '1')
-                    {
+                    if (pos < list.size() && list.get(pos) == '1') {
                         tmp++;
                     }
                 }
             }
-            //write 0 / 1 into array parity
-            {
-                int ppos = (int) Math.pow(2, i);
-                list.set(ppos-1, Integer.toString((tmp % 2)).charAt(0));
-                System.out.println("p" + i + " = " + (tmp % 2));
-            }
-
+            int ppos = (int) Math.pow(2, i);
+            list.set(ppos - 1, Integer.toString((tmp % 2)).charAt(0));
+            System.out.println("p" + i + " = " + (tmp % 2));
         }
-        
         return list;
     }
 
+    /**
+     * Remove first index of List to normalize it
+     * @param list
+     * @return shortened list
+     *
+     */
     public static List<Character> normalizeList(List<Character> list)
     {
         list.remove(0);
         return list;
     }
 
+    /**
+     * Checks if the given value num is part of the exponential row with the base base
+     * @param num
+     * @param base
+     * @return true if num is part of the exponential row
+     */
     public static boolean isSequence(int num, int base)
     {
         for (int i = 0; i < input.length(); i++) {
