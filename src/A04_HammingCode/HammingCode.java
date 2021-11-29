@@ -6,7 +6,8 @@ import java.util.List;
 
 public class HammingCode {
 
-    public static String input = "00011010";
+    //public static String input = "00011010";
+    public static String input = "000110101101010";
     public static List<Character> arr = new ArrayList<Character>();
     public static final int offset = 1;
     public static final Character PARITYBIT = 'X';
@@ -14,6 +15,8 @@ public class HammingCode {
 
     public static void main(String[] args)
     {
+        System.out.println(calculateListLength(16));
+
         arr = populateList(arr);
         //Remove first index with value N
         arr = normalizeList(arr);
@@ -33,7 +36,8 @@ public class HammingCode {
     {
         int numPos = 0;
         list.add('N');
-        for (int i = 1; i < 12 + offset; i++)
+        //for (int i = 1; i < 12 + offset; i++)
+        for (int i = 1; i < calculateListLength(input.length()) + offset; i++)
         {
             if (isSequence(i, 2))
             {
@@ -48,7 +52,6 @@ public class HammingCode {
         }
         return list;
     }
-
 
     /**
      * Calculate Paritybits and replace the placeholders
@@ -101,5 +104,12 @@ public class HammingCode {
                 return true;
         }
         return false;
+    }
+
+    public static int calculateListLength(int length)
+    {
+        // calculate log2 N indirectly
+        // using log() method
+        return (int)(Math.log(length) / Math.log(2)) + length + 1;
     }
 }
